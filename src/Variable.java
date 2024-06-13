@@ -5,7 +5,6 @@ public class Variable {
     private Map<String, List<Integer>> pageTable = new HashMap<>(); // Tabela de páginas
 
     public void circularFit(int memorySize, List<String> inputs) {
-        // Inicializa a memória com 0s
         int[] memory = new int[memorySize];
         
         for (String line : inputs) {
