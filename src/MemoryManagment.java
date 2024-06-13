@@ -19,15 +19,15 @@ public class MemoryManagment {
             Variable variable = new Variable();
 
             if (this.policy == 1) {
-                System.out.println("A política escolhida foi worst-fit.");
+                System.out.println("A política escolhida foi worst-fit.\n");
                 variable.worstFit(memorySize, inputs);
             } else if (this.policy == 2) {
-                System.out.println("A política escolhida foi circular-fit.");
+                System.out.println("A política escolhida foi circular-fit.\n");
                 variable.circularFit(memorySize, inputs);
             }
-            
+
         } else if (this.partition == 2) {
-            System.out.println("Foi escolhido a partição definida (sistema buddy).");
+            System.out.println("Foi escolhido a partição definida (sistema buddy).\n");
             Buddy buddy = new Buddy();
             buddy.start(memorySize, inputs);
         }

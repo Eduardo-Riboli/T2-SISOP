@@ -1,72 +1,105 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Variable {
-    private int pointer = 0; // Ponteiro para Circular-Fit
-    private Map<String, List<Integer>> pageTable = new HashMap<>(); // Tabela de páginas
+    private int pointer = 0;
+    private Map<String, List<Integer>> pageTable = new HashMap<>();
 
     public void circularFit(int memorySize, List<String> inputs) {
         int[] memory = new int[memorySize];
-        
+
         for (String line : inputs) {
             String[] parts = line.split("[(),]");
+
             String command = parts[0].trim();
             String process = parts[1].trim();
+
             if (command.equals("IN")) {
-                int size = Integer.parseInt(parts[2].trim());
-                if (!allocateCircularFit(memory, process, size)) {
-                    System.out.println("ESPAÇO INSUFICIENTE DE MEMÓRIA para " + process);
+                int processSize = Integer.parseInt(parts[2].trim());
+                boolean success = putInMemoryCircularFit(memory, process, processSize);
+
+                if (success) {
+                    System.out.println(
+                            "O processo (" + process + ", " + processSize + ") foi alocado com sucesso!");
                 } else {
-                    System.out.println("Processo " + process + " alocado com sucesso!");
+                    System.out.println(
+                            "ESPAÇO INSUFICIENTE DE MEMÓRIA para o processo (" + process + ", " + processSize + ")");
                 }
+
+                printMemory(memory, memorySize);
+
             } else if (command.equals("OUT")) {
-                deallocate(memory, process);
-                System.out.println("Processo " + process + " desalocado com sucesso!");
+                boolean verification = outInMemoryCircularFit(memory, process);
+
+                if (verification) {
+                    System.out.println("O processo (" + process + ") foi desalocado com sucesso!");
+
+                    printMemory(memory, memorySize);
+                }
             }
-            printMemory(memory, memorySize);
         }
     }
 
-    private boolean allocateCircularFit(int[] memory, String process, int size) {
-        int memorySize = memory.length;
-        int start = pointer;
+    private boolean putInMemoryCircularFit(int[] memory, String process, int size) {
+        int memoryLength = memory.length;
+        int startMemory = pointer;
         int freeSpace = 0;
         List<Integer> allocatedPositions = new ArrayList<>();
-        
+
+        // Validação para ver se tem local para esse processo.
+        int totalFreeSpace = 0;
+        for (int i = 0; i < memoryLength; i++) {
+            if (memory[i] == 0) {
+                totalFreeSpace++;
+            }
+        }
+        if (size > totalFreeSpace) {
+            return false;
+        }
+
+        // Se há local, valida as posições consecutivas para a alocação do mesmo.
         while (true) {
-            // Verifica se há espaço suficiente a partir da posição atual
-            while (pointer < memorySize && memory[pointer] == 0) {
+            while (pointer < memoryLength && memory[pointer] == 0) {
                 freeSpace++;
                 allocatedPositions.add(pointer);
                 if (freeSpace == size) {
-                    // Encontra um bloco livre adequado
                     for (int pos : allocatedPositions) {
-                        memory[pos] = 1; // Marca a memória como ocupada
+                        memory[pos] = 1;
                     }
-                    pageTable.put(process, new ArrayList<>(allocatedPositions)); // Registra as posições alocadas
-                    pointer = (pointer + 1) % memorySize; // Avança o ponteiro
+                    pageTable.put(process, new ArrayList<>(allocatedPositions));
+                    pointer = (pointer + 1) % memoryLength;
+
                     return true;
                 }
-                pointer = (pointer + 1) % memorySize;
+                pointer = (pointer + 1) % memoryLength;
             }
-            // Se a posição atual não for livre, reseta freeSpace e avança o ponteiro
+
             freeSpace = 0;
             allocatedPositions.clear();
-            pointer = (pointer + 1) % memorySize;
+            pointer = (pointer + 1) % memoryLength;
 
-            // Se voltarmos ao ponto de partida, a memória está cheia ou fragmentada
-            if (pointer == start) {
+            // Caso o ponteiro volte para a primeira posição da memória, significa que não
+            // achou
+            // uma posição válida, ou seja, retorna falso.
+            if (pointer == startMemory) {
                 return false;
             }
         }
     }
 
-    private void deallocate(int[] memory, String process) {
+    // Remove o processo da memória, com base nas posições da tabela de página.
+    private boolean outInMemoryCircularFit(int[] memory, String process) {
         List<Integer> positions = pageTable.get(process);
         if (positions != null) {
             for (int pos : positions) {
-                memory[pos] = 0; // Marca a memória como livre
+                memory[pos] = 0;
             }
-            pageTable.remove(process); // Remove o processo da tabela
+            pageTable.remove(process);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -74,6 +107,7 @@ public class Variable {
         int freeMemory = 0;
         int allocatedMemory = 0;
 
+        // valida o que é memória livre e alocada.
         for (int i : memory) {
             if (i == 0) {
                 freeMemory++;
@@ -82,9 +116,10 @@ public class Variable {
             }
         }
 
+        // Realiza prints para facilitar a visualização da memória.
         System.out.print("Estado atual da memória: | ");
         for (int i : memory) {
-            System.out.print(i == 0 ? "." : "#");
+            System.out.print(i != 0 ? "#" : ".");
         }
         System.out.println(" |");
 
@@ -96,10 +131,7 @@ public class Variable {
 
     public void worstFit(int memorySize, List<String> inputs) {
         for (String line : inputs) {
-            
+
         }
     }
 }
-
-
-
