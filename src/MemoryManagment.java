@@ -16,14 +16,18 @@ public class MemoryManagment {
 
         if (this.partition == 1) {
             System.out.println("Foi escolhido a partição variável.");
-            Variable variable = new Variable();
 
             if (this.policy == 1) {
                 System.out.println("A política escolhida foi worst-fit.\n");
-                variable.worstFit(memorySize, inputs);
+
+                WorstFit worstFit = new WorstFit();
+                worstFit.start(memorySize, inputs);
+
             } else if (this.policy == 2) {
                 System.out.println("A política escolhida foi circular-fit.\n");
-                variable.circularFit(memorySize, inputs);
+
+                CircularFit circularFit = new CircularFit();
+                circularFit.start(memorySize, inputs);
             }
 
         } else if (this.partition == 2) {

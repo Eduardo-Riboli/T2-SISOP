@@ -3,11 +3,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Variable {
+public class CircularFit {
     private int pointer = 0;
     private Map<String, List<Integer>> pageTable = new HashMap<>();
 
-    public void circularFit(int memorySize, List<String> inputs) {
+    public void start(int memorySize, List<String> inputs) {
         int[] memory = new int[memorySize];
 
         for (String line : inputs) {
@@ -127,11 +127,5 @@ public class Variable {
         System.out.println("Memória alocada: " + allocatedMemory + " unidades");
         System.out.println("Memória total: " + memorySize + " unidades");
         System.out.println("---------------------------");
-    }
-
-    public void worstFit(int memorySize, List<String> inputs) {
-        for (String line : inputs) {
-
-        }
     }
 }
