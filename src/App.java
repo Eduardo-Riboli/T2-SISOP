@@ -37,8 +37,8 @@ public class App {
 
         inputs = readFile(textFile);
 
-        MemoryManagment os = new MemoryManagment();
-        os.start(memorySize, partition, policy, inputs);
+        MemoryManagment memoryManagment = new MemoryManagment();
+        memoryManagment.start(memorySize, partition, policy, inputs);
     }
 
     public static List<String> readFile(String fileName) {

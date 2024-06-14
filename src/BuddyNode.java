@@ -1,6 +1,7 @@
 public class BuddyNode {
     int size;
     int remaingSize;
+    String process;
     Boolean isFree;
     BuddyNode leftChild;
     BuddyNode rightChild;
@@ -13,6 +14,7 @@ public class BuddyNode {
         this.leftChild = null;
         this.rightChild = null;
         this.father = null;
+        this.process = null;
     }
 
     public void divide() {
@@ -21,7 +23,7 @@ public class BuddyNode {
             this.rightChild = new BuddyNode(this.size / 2);
             this.leftChild.father = this;
             this.rightChild.father = this;
-        }  
+        }
     }
 
     public void merge() {
