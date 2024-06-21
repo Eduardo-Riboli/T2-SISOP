@@ -1,33 +1,44 @@
+import java.util.LinkedList;
+import java.util.List;
+
 public class Buddy {
+  
 
-    public boolean putInMemoryBuddy(BuddyNode buddyNode, String process, int size) {
-        if (buddyNode.isFree && buddyNode.size > size) {
-            if (buddyNode.leftChild == null) {
-                buddyNode.leftChild = new BuddyNode(size / 2);
-                buddyNode.rightChild = new BuddyNode(size / 2);
-                buddyNode.leftChild.father = buddyNode;
-                buddyNode.rightChild.father = buddyNode;
+    public boolean putInMemoryBuddy(BuddyNode buddyNode, String process, int processSize) {
+    
+        List<BuddyNode> list = new LinkedList<>();
+        list.add(buddyNode);
+        boolean finish = false;
+        
+        while (list.size() > 0) {
+            BuddyNode child = list.remove(0);
 
-                if (buddyNode.leftChild.size > size) {
-                    if (this.putInMemoryBuddy(buddyNode.leftChild, process, buddyNode.leftChild.size)
-                            || this.putInMemoryBuddy(buddyNode.rightChild, process, buddyNode.rightChild.size)) {
-                        buddyNode.isFree = false;
-                        return true;
-                    }
-                } else {
-                    buddyNode.isFree = false;
-                    return true;
+            if (!child.isFree) {
+                if (child.size / 2 >= processSize) {
+                    // Ja está dividido
+                    list.add(child.leftChild);
+                    list.add(child.rightChild);
                 }
-            } else if (buddyNode.leftChild.remaingSize >= size || buddyNode.rightChild.remaingSize >= size) {
-                return true;
             } else {
-                return false;
+                if (child.size / 2 >= processSize) {
+                    // Tem que dividir
+                    child.divide();
+                    list.add(0, child.leftChild);
+                    list.add(1, child.rightChild);
+                }
+                else if (child.remaingSize >= processSize) {
+                    child.process = process;
+                    child.remaingSize -= processSize;
+                    finish = true;
+                    break;
+                }
+                else {
+                    continue;
+                }
             }
-        } else {
-            return false;
         }
 
-        return false;
+        return finish;
     }
 
     public boolean outInMemoryBuddy(BuddyNode buddyNode, String process) {

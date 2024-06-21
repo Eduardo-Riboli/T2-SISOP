@@ -19,28 +19,22 @@ public class MemoryManagment {
 
             if (this.policy == 1) {
                 System.out.println(" ===> A política escolhida foi worst-fit.\n");
-                this.startAllocation(memorySize, inputs, policy);
+                this.startAllocationVariable(memorySize, inputs, policy);
 
             } else if (this.policy == 2) {
                 System.out.println(" ===> A política escolhida foi circular-fit.\n");
-                this.startAllocation(memorySize, inputs, policy);
+                this.startAllocationVariable(memorySize, inputs, policy);
             }
 
         } else if (this.partition == 2) {
             System.out.println("Foi escolhido a partição definida (sistema buddy).\n");
-            this.startAllocation(memorySize, inputs, 3);
+            this.startAllocationBuddy(memorySize, inputs);
             // 3 se refere ao buddy, para conseguirmos utilizar a mesma estrutura que
             // construimos
         }
     }
 
-    public void startAllocation(int memorySize, List<String> inputs, int partition) {
-        int[] memory = new int[memorySize];
-        // WorstFit
-        WorstFit worstFit = new WorstFit();
-        // CircularFit
-        CircularFit circularFit = new CircularFit();
-        // Buddy
+    public void startAllocationBuddy(int memorySize, List<String> inputs) {
         Buddy buddy = new Buddy();
         BuddyNode rootBuddyNode = new BuddyNode(memorySize);
 
@@ -52,9 +46,29 @@ public class MemoryManagment {
 
             if (command.equals("IN")) {
                 int processSize = Integer.parseInt(parts[2].trim());
-                boolean success = partition == 1 ? worstFit.putInMemoryWorstFit(memory, process, processSize)
-                        : partition == 2 ? circularFit.putInMemoryCircularFit(memory, process, processSize)
-                                : buddy.putInMemoryBuddy(rootBuddyNode, process, memorySize);
+                buddy.putInMemoryBuddy(rootBuddyNode, process, processSize);
+            } else if (command.equals("OUT")) {
+                buddy.outInMemoryBuddy(rootBuddyNode, process);
+            }
+        }
+    }
+
+    public void startAllocationVariable(int memorySize, List<String> inputs, int policy) {
+        int[] memory = new int[memorySize];
+        
+        WorstFit worstFit = new WorstFit();
+        CircularFit circularFit = new CircularFit();
+        
+        for (String line : inputs) {
+            String[] parts = line.split("[(),]");
+
+            String command = parts[0].trim();
+            String process = parts[1].trim();
+
+            if (command.equals("IN")) {
+                int processSize = Integer.parseInt(parts[2].trim());
+                boolean success = policy == 1 ? worstFit.putInMemoryWorstFit(memory, process, processSize) 
+                        : circularFit.putInMemoryCircularFit(memory, process, processSize);
 
                 if (success) {
                     System.out.println(
@@ -64,13 +78,13 @@ public class MemoryManagment {
                             "ESPAÇO INSUFICIENTE DE MEMÓRIA para o processo (" + process + ", " + processSize + ")");
                 }
 
+                // print variavel
                 this.printMemory(memory, memorySize);
 
             } else if (command.equals("OUT")) {
-                boolean verification = partition == 1 ? worstFit.outInMemoryWorstFit(memory, process)
-                        : partition == 2 ? circularFit.outInMemoryCircularFit(memory, process)
-                                : buddy.outInMemoryBuddy(rootBuddyNode, process);
-
+                boolean verification = policy == 1 ? worstFit.outInMemoryWorstFit(memory, process)
+                        : circularFit.outInMemoryCircularFit(memory, process);
+                               
                 if (verification) {
                     System.out.println("O processo (" + process + ") foi desalocado com sucesso!");
 
@@ -105,5 +119,18 @@ public class MemoryManagment {
         System.out.println(" |");
 
         System.out.println("---------------------------");
+    }
+
+    public void printMemoryBuddy(BuddyNode buddyNode, int level) {
+        if (buddyNode == null) {
+            return;
+        }
+
+        // Meio que para identar o codigo com base no level que o buddy esta
+        String space = "  ".repeat(level);
+        System.out.println(space + "| Memória Total: " + buddyNode.size + ", Memória Livre: " + buddyNode.remaingSize + ", Processo: " + (buddyNode.process != null ? buddyNode.process : "Nenhum") + ", Status: " + (buddyNode.isFree ? "Livre" : "Dividido") + " |");
+
+        printMemoryBuddy(buddyNode.leftChild, level + 1);
+        printMemoryBuddy(buddyNode.rightChild, level + 1);
     }
 }

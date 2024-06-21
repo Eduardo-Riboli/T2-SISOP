@@ -23,14 +23,18 @@ public class BuddyNode {
             this.rightChild = new BuddyNode(this.size / 2);
             this.leftChild.father = this;
             this.rightChild.father = this;
+            this.isFree = false; // ou seja, ele não está mais livre
         }
     }
 
     public void merge() {
-        BuddyNode father = this.father;
-        if (father.leftChild.isFree && father.rightChild.isFree) {
+        BuddyNode buddyNode = this;
+        BuddyNode father = buddyNode.father;
+        if (father != null && !father.isFree && father.leftChild.isFree && father.rightChild.isFree) {
             father.leftChild = null;
             father.rightChild = null;
+            father.isFree = true;
+            father.merge(); // Realiza meio q uma recursão.
         }
     }
 }
