@@ -114,6 +114,7 @@ public class MemoryManagment {
                 if (verification) {
                     System.out.println("O processo (" + process + ") foi desalocado com sucesso!");
 
+                    // print variavel
                     this.printMemory(memory, memorySize);
                 }
             }
@@ -147,17 +148,17 @@ public class MemoryManagment {
         System.out.println("---------------------------");
     }
 
-    public void printMemoryBuddy(BuddyNode buddyNode, int level) {
+    public void printMemoryBuddy(BuddyNode buddyNode, int layer) {
         if (buddyNode == null) {
             return;
         }
 
-        // Meio que para identar o codigo com base no level que o buddy esta
-        String space = "  ".repeat(level);
+        // Para identar o codigo com base na camada que o buddy esta
+        String space = "  ".repeat(layer);
         System.out.println(space + "| Memória Total: " + buddyNode.size + ", Memória Restante: " + buddyNode.remaingSize + ", Processo: " 
                 + (buddyNode.process != null ? buddyNode.process : "Nenhum") + ", Status: " + (buddyNode.isFree ? "Livre" : "Dividido") + " |");
 
-        printMemoryBuddy(buddyNode.leftChild, level + 1);
-        printMemoryBuddy(buddyNode.rightChild, level + 1);
+        printMemoryBuddy(buddyNode.leftChild, layer + 1);
+        printMemoryBuddy(buddyNode.rightChild, layer + 1);
     }
 }

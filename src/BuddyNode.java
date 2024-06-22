@@ -23,7 +23,7 @@ public class BuddyNode {
             this.rightChild = new BuddyNode(this.size / 2);
             this.leftChild.father = this;
             this.rightChild.father = this;
-            this.isFree = false; // ou seja, ele não está mais livre
+            this.isFree = false; // ou seja, ele não está mais livre, e sim, dividido
         }
     }
 
@@ -35,7 +35,7 @@ public class BuddyNode {
             father.leftChild = null;
             father.rightChild = null;
             father.isFree = true;
-            father.merge(); // Realiza meio q uma recursão.
+            father.merge(); // Realiza meio q uma recursão, para ir fechando os nodos superiores, caso necessitem.
         }
     }
 }
