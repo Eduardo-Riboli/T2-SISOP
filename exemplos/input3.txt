@@ -1,5 +1,5 @@
 IN(A, 31)
-IN(B, 16)
+IN(B, 15)
 IN(C, 13)
 OUT(B)
 IN(D, 34)

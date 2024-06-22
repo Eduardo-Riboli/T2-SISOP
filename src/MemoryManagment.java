@@ -46,9 +46,35 @@ public class MemoryManagment {
 
             if (command.equals("IN")) {
                 int processSize = Integer.parseInt(parts[2].trim());
-                buddy.putInMemoryBuddy(rootBuddyNode, process, processSize);
+                boolean success = buddy.putInMemoryBuddy(rootBuddyNode, process, processSize);
+
+                if (success) {
+                    System.out.println(
+                            "O processo (" + process + ", " + processSize + ") foi alocado com sucesso!");
+                } else {
+                    System.out.println(
+                            "ESPAÇO INSUFICIENTE DE MEMÓRIA para o processo (" + process + ", " + processSize + ")");
+                }
+
+                System.out.println("");
+                // print buddy
+                this.printMemoryBuddy(rootBuddyNode, 0);
+
+                System.out.println("---------------------------");
+
             } else if (command.equals("OUT")) {
-                buddy.outInMemoryBuddy(rootBuddyNode, process);
+
+                boolean verification = buddy.outInMemoryBuddy(rootBuddyNode, process);
+                               
+                if (verification) {
+                    System.out.println("O processo (" + process + ") foi desalocado com sucesso!");
+
+                    System.out.println("");
+                    // print buddy
+                    this.printMemoryBuddy(rootBuddyNode, 0);
+
+                    System.out.println("---------------------------");
+                }      
             }
         }
     }
@@ -128,7 +154,8 @@ public class MemoryManagment {
 
         // Meio que para identar o codigo com base no level que o buddy esta
         String space = "  ".repeat(level);
-        System.out.println(space + "| Memória Total: " + buddyNode.size + ", Memória Livre: " + buddyNode.remaingSize + ", Processo: " + (buddyNode.process != null ? buddyNode.process : "Nenhum") + ", Status: " + (buddyNode.isFree ? "Livre" : "Dividido") + " |");
+        System.out.println(space + "| Memória Total: " + buddyNode.size + ", Memória Restante: " + buddyNode.remaingSize + ", Processo: " 
+                + (buddyNode.process != null ? buddyNode.process : "Nenhum") + ", Status: " + (buddyNode.isFree ? "Livre" : "Dividido") + " |");
 
         printMemoryBuddy(buddyNode.leftChild, level + 1);
         printMemoryBuddy(buddyNode.rightChild, level + 1);

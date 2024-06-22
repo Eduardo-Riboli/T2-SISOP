@@ -14,20 +14,20 @@ public class Buddy {
             BuddyNode child = list.remove(0);
 
             if (!child.isFree) {
-                if (child.size / 2 >= processSize) {
+                if (child.remaingSize / 2 >= processSize) {
                     // Ja está dividido
-                    list.add(child.leftChild);
-                    list.add(child.rightChild);
+                    list.add(0, child.leftChild);
+                    list.add(1, child.rightChild);
                 }
             } else {
-                if (child.size / 2 >= processSize) {
+                if (child.remaingSize / 2 >= processSize) {
                     // Tem que dividir
                     child.divide();
                     list.add(0, child.leftChild);
                     list.add(1, child.rightChild);
                 }
                 else if (child.remaingSize >= processSize) {
-                    child.process = process;
+                    child.process = child.process != null ? (child.process.equals("") ? process : child.process + " & " + process) : process;
                     child.remaingSize -= processSize;
                     finish = true;
                     break;
@@ -42,6 +42,30 @@ public class Buddy {
     }
 
     public boolean outInMemoryBuddy(BuddyNode buddyNode, String process) {
-        return false;
+
+        List<BuddyNode> list = new LinkedList<>();
+        list.add(buddyNode);
+        boolean finish = false;
+
+        while (list.size() > 0) {
+            BuddyNode child = list.remove(0);
+
+            if (child.isFree && child.process != null && child.process.equals(process)) {
+                child.process = null;
+                child.remaingSize = child.size;
+                finish = true;
+                child.merge();
+                break;
+            } else {
+                if (child.leftChild != null) {
+                    list.add(child.leftChild);
+                }
+                if (child.rightChild != null) {
+                    list.add(child.rightChild);
+                }
+            }
+        }
+
+        return finish;
     }
 }

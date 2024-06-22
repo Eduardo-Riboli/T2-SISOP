@@ -30,7 +30,8 @@ public class BuddyNode {
     public void merge() {
         BuddyNode buddyNode = this;
         BuddyNode father = buddyNode.father;
-        if (father != null && !father.isFree && father.leftChild.isFree && father.rightChild.isFree) {
+        if (father != null && !father.isFree && (father.leftChild.remaingSize == father.leftChild.size) 
+                && (father.rightChild.remaingSize == father.rightChild.size) && father.leftChild.isFree && father.rightChild.isFree) {
             father.leftChild = null;
             father.rightChild = null;
             father.isFree = true;
