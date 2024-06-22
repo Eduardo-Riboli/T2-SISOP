@@ -57,14 +57,16 @@ public class CircularFit {
     // Remove o processo da memória, com base nas posições da tabela de página.
     public boolean outInMemoryCircularFit(int[] memory, String process) {
         List<Integer> positions = pageTable.get(process);
+        boolean success = false;
+
         if (positions != null) {
             for (int pos : positions) {
                 memory[pos] = 0;
             }
             pageTable.remove(process);
-            return true;
-        } else {
-            return false;
-        }
+            success = true;
+        } 
+
+        return success;
     }
 }
