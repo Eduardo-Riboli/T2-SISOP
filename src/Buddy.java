@@ -26,8 +26,8 @@ public class Buddy {
                     list.add(0, child.leftChild);
                     list.add(1, child.rightChild);
                 }
-                else if (child.remaingSize >= processSize) {
-                    child.process = child.process != null ? (child.process.equals("") ? process : child.process + " & " + process) : process;
+                else if (child.remaingSize >= processSize && child.process == null) {
+                    child.process = process;
                     child.remaingSize -= processSize;
                     finish = true;
                     break;
