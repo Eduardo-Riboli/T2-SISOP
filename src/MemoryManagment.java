@@ -34,6 +34,7 @@ public class MemoryManagment {
         }
     }
 
+    // alocação dos métodos buddy
     public void startAllocationBuddy(int memorySize, List<String> inputs) {
         Buddy buddy = new Buddy();
         BuddyNode rootBuddyNode = new BuddyNode(memorySize);
@@ -79,6 +80,7 @@ public class MemoryManagment {
         }
     }
 
+    // Alocação dos métodos variáveis
     public void startAllocationVariable(int memorySize, List<String> inputs, int policy) {
         int[] memory = new int[memorySize];
         
@@ -121,6 +123,7 @@ public class MemoryManagment {
         }
     }
 
+    // print memory variable
     public void printMemory(int[] memory, int memorySize) {
         int freeMemory = 0;
         int allocatedMemory = 0;
@@ -148,6 +151,7 @@ public class MemoryManagment {
         System.out.println("---------------------------");
     }
 
+    // print memory buddy
     public void printMemoryBuddy(BuddyNode buddyNode, int layer) {
         if (buddyNode == null) {
             return;

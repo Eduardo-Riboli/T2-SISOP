@@ -3,7 +3,6 @@ import java.util.List;
 
 public class Buddy {
   
-
     public boolean putInMemoryBuddy(BuddyNode buddyNode, String process, int processSize) {
     
         List<BuddyNode> list = new LinkedList<>();
@@ -51,12 +50,14 @@ public class Buddy {
             BuddyNode child = list.remove(0);
 
             if (child.isFree && child.process != null && child.process.equals(process)) {
+                // Caso encontre o processo, tira ele do nodo e realiza o merge
                 child.process = null;
                 child.remaingSize = child.size;
                 finish = true;
                 child.merge();
                 break;
             } else {
+                // adiciona os filhos, se existirem
                 if (child.leftChild != null) {
                     list.add(child.leftChild);
                 }
